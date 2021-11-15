@@ -1,6 +1,9 @@
 package com.example.task.dto;
 
+import com.example.task.entity.Product;
+
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.UUID;
 
 /**
@@ -14,6 +17,15 @@ public class ProductWithRating {
     private long count;
     private BigDecimal price;
     private BigDecimal averageRating;
+
+    public ProductWithRating(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.count = product.getCount();
+        this.price = product.getPrice();
+        this.averageRating = new BigDecimal(BigInteger.ZERO);
+    }
 
     public BigDecimal getAverageRating() {
         return averageRating;

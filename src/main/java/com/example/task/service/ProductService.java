@@ -63,13 +63,7 @@ public class ProductService {
     public List<ProductWithRating> findByCategoryAndCurrency(String categoryName, String currency) {
         List<ProductWithRating> list = findByCategoryName(categoryName)
                 .stream()
-                .map(p -> new ProductWithRating()
-                        .setAverageRating(new BigDecimal(BigInteger.ZERO))
-                        .setId(p.getId())
-                        .setName(p.getName())
-                        .setDescription(p.getDescription())
-                        .setCount(p.getCount())
-                        .setPrice(p.getPrice()))
+                .map(ProductWithRating::new)
                 .collect(Collectors.toList());
         if (currencies.containsKey(currency)) {
             for(ProductWithRating product : list) {
