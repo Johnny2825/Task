@@ -7,7 +7,7 @@
     <changeSet id="init-1.0" author="tarkhov">
 
         <createTable tableName="category">
-            <column name="id" type="uuid">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="varchar(80)">
@@ -16,7 +16,7 @@
         </createTable>
 
         <createTable tableName="product">
-            <column name="id" type="uuid">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
             <column name="name" type="varchar(80)">
@@ -28,22 +28,22 @@
         </createTable>
 
         <createTable tableName="category_product">
-            <column name="id" type="uuid">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="category_id" type="uuid">
+            <column name="category_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="category_id" references="category(id)"/>
             </column>
-            <column name="product_id" type="uuid">
+            <column name="product_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="product_id" references="product(id)"/>
             </column>
         </createTable>
 
         <createTable tableName="comment">
-            <column name="id" type="uuid">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="product" type="uuid">
+            <column name="product" type="bigint">
                 <constraints nullable="false" foreignKeyName="product_id" references="product(id)"/>
             </column>
             <column name="name" type="varchar(80)">

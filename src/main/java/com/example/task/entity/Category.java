@@ -2,6 +2,7 @@ package com.example.task.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,18 +14,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "category")
+@Data
 public class Category {
 
-    @PrePersist
-    public void init() {
-        if (this.id == null)
-            this.id = UUID.randomUUID();
-    }
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private UUID id;
+    private Long id;
 
     @Column(name = "name", nullable = false, length = 80)
     private String name;
@@ -37,28 +33,4 @@ public class Category {
     )
     @JsonIgnore
     private List<Product> products;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
 }

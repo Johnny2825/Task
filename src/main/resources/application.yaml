@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/spring_shop?currentSchema=task
-    username: spring
-    password: spring
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=task
+    username: postgres
+    password: postgres
   liquibase:
     change-log: classpath:db/changelog-master.yaml
 
