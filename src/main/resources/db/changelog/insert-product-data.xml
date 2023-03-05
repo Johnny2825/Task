@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="insert-product-data" author="tarkhov">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="category"/>
+            <tableExists tableName="product"/>
+        </preConditions>
+        <insert tableName="product">
+            <column name="id" valueSequenceNext="product_id_seq"/>
+            <column  name="category_id"
+                     valueComputed="(SELECT id FROM category WHERE name LIKE 'Молочная продукция' LIMIT 1)"/>
+            <column  name="name"  value="Молоко"/>
+            <column  name="description"  value="Молоко 2.5"/>
+            <column  name="count"  value="50"/>
+            <column  name="price"  value="56.65"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueSequenceNext="product_id_seq"/>
+            <column  name="category_id"
+                     valueComputed="(SELECT id FROM category WHERE name LIKE 'Молочная продукция' LIMIT 1)"/>
+            <column  name="name"  value="Кефир"/>
+            <column  name="description"  value="Кефир жирный"/>
+            <column  name="count"  value="14"/>
+            <column  name="price"  value="42.32"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueSequenceNext="product_id_seq"/>
+            <column  name="category_id"
+                     valueComputed="(SELECT id FROM category WHERE name LIKE 'Молочная продукция' LIMIT 1)"/>
+            <column  name="name"  value="Творог"/>
+            <column  name="description"  value="Творог"/>
+            <column  name="count"  value="32"/>
+            <column  name="price"  value="84.77"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueSequenceNext="product_id_seq"/>
+            <column  name="category_id"
+                     valueComputed="(SELECT id FROM category WHERE name LIKE 'Мясная продукция' LIMIT 1)"/>
+            <column  name="name"  value="Колбаса"/>
+            <column  name="description"  value="Докторская колбаса"/>
+            <column  name="count"  value="141"/>
+            <column  name="price"  value="265.5"/>
+        </insert>
+        <insert tableName="product">
+            <column name="id" valueSequenceNext="product_id_seq"/>
+            <column  name="category_id"
+                     valueComputed="(SELECT id FROM category WHERE name LIKE 'Мясная продукция' LIMIT 1)"/>
+            <column  name="name"  value="Сосиски"/>
+            <column  name="description"  value="Сосиски"/>
+            <column  name="count"  value="85"/>
+            <column  name="price"  value="187.9"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

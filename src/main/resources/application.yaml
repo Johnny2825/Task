@@ -2,10 +2,19 @@ server:
   port: 8090
 
 spring:
+# Postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=task
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=shop
     username: postgres
     password: postgres
+# H2
+#  datasource:
+#    url: jdbc:h2:mem:mydb
+#    username: user
+#    password: userpass
+#    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
   liquibase:
     change-log: classpath:db/changelog-master.yaml
 

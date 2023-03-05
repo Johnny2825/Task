@@ -1,11 +1,15 @@
 package com.example.task.repository;
 
-import com.example.task.entity.Comment;
-import org.springframework.data.repository.CrudRepository;
+import com.example.task.entity.CommentEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
+import java.util.List;
 
+@Repository
+public interface CommentRepository extends PagingAndSortingRepository<CommentEntity, Long> {
+
+    List<CommentEntity> findAllByProductId(Long productId, Pageable pageable);
 
 }

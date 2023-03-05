@@ -1,14 +1,20 @@
 package com.example.task.service.category;
 
-import com.example.task.entity.Category;
+import com.example.task.controller.dto.CategoryDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * Сервис для работы с категорями продуктов
+ *
+ * @author Tarkhov Evgeniy
+ */
 public interface CategoryService {
 
-    List<Category> findAll();
+    Page<CategoryDto> findAll(Pageable pageable);
 
-    Category findByName(String name);
+    Optional<CategoryDto> findById(Long id);
 
-    Category findById(String id);
 }

@@ -1,15 +1,24 @@
 package com.example.task.service.product;
 
-import com.example.task.entity.Product;
+import com.example.task.controller.dto.CommentDto;
+import com.example.task.controller.dto.ProductDto;
+import com.example.task.entity.ProductEntity;
+import com.example.task.mapper.ProductMapper;
+import com.example.task.model.ProductWithRatingDto;
 import com.example.task.repository.ProductRepository;
+import com.example.task.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
-
-import static com.example.task.utils.Utils.parseLongSafety;
-import static java.util.Objects.isNull;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Класс сервис для работы с продуктами.
@@ -17,115 +26,58 @@ import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
-public class ProductServiceImpl implements  ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
-    /**
-     * Поиск продукта по его индексу.
-     *
-     * @param idStr - индекс продукта.
-     * @returns Product - продукт из базы.
-     */
-
-    public Product findById(String idStr) {
-        if (isNull(idStr)) {
-            return null;
-        }
-        Long id = parseLongSafety(idStr);
-        if (isNull(id)) {
-            return null;
-        }
-        return productRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
+    private final ProductMapper productMapper;
+    private final CommentService commentService;
 
 
     @Override
-    public List<Product> findAllMoreThan(String value) {
-        if (isNull(value)) {
-            return null;
-        }
-        Long count = parseLongSafety(value);
-        if (isNull(count)) {
-            return null;
-        }
-        return productRepository.findAllWhereCountMoreThan(count);
+    public Page<ProductDto> findAll(Pageable pageable) {
+        List<ProductDto> productDtoList = productRepository.findAll(pageable)
+                .stream()
+                .map(productMapper::map)
+                .collect(Collectors.toList());
+        return new PageImpl<>(productDtoList);
     }
 
     @Override
-    @Transactional
-    public List<Product> test() {
-        List<Product> productList = productRepository.findAll();
-        Product productFromDb = productRepository.findById(1L).orElse(null);
-        System.out.println(productFromDb);
-//        productFromDb.setCount(3L);
-//        productRepository.save(productFromDb);
-        Product productFromDb2 = productRepository.findById(1L).orElse(null);
-        System.out.println(productFromDb2);
-        return productList;
+    public Optional<ProductDto> findById(Long id) {
+        Optional<ProductEntity> productEntityOptional = productRepository.findById(id);
+        return productEntityOptional.map(productMapper::map);
     }
 
-    //
-//    /**
-//     * Поиск всех продуктов по названию категории.
-//     *
-//     * @param categoryName - название категории.
-//     * @returns List<Product> - список продуктов из одной категории.
-//     */
-//
-//    public List<Product> findByCategoryName(String categoryName) {
-//        return null;
-////        return productRepository.findByCategoryName(categoryName);
-//    }
-//
-//    public List<String> findAllByIds(List<String> ids) {
-//        return productRepository.findAllByIds(ids, ids);
-//    }
-//
-//    /**
-//     * Преобразование списка продуктов из одной категории в объект ProductWithRating
-//     * с полем averageRating и заполнение этого поля.
-//     * Пересчет стоимости продуктов в заданную валюту.
-//     *
-//     * @param categoryName - название категории.
-//     * @param currency     - аббревиатура валюты в виде 3 символов.
-//     * @returns List<ProductWithRating> - список продуктов из одной категории.
-//     */
-//
-//    public List<ProductWithRating> findByCategoryAndCurrency(String categoryName, String currency) {
-////        List<ProductWithRating> list = findByCategoryName(categoryName)
-////                .stream()
-////                .map(ProductWithRating::new)
-////                .collect(Collectors.toList());
-////        if (currencies.containsKey(currency)) {
-////            for(ProductWithRating product : list) {
-////                product.setPrice(product.getPrice().divide(currencies.get(currency), 2, RoundingMode.HALF_UP));
-////                product.setAverageRating(BigDecimal.valueOf(productRepository.avgRating(product.getId())));
-////            }
-////        }
-////         return list;
-//        return null;
-//    }
-//
-//    /**
-//     * Изменение количества продуктов в базе на основе списка купленных.
-//     *
-//     * @param purchasedProductInputs - лист купленных продуктов.
-//     */
-//
-//    public void changeCountOfProduct(List<PurchasedProductInput> purchasedProductInputs) {
-////        for (PurchasedProductInput product : purchasedProductInputs) {
-////            productRepository.updateCountById(product.getId(), product.getCount());
-////        }
-//    }
-//
-//    public List<Product> findCategoryByComment(String comment) {
-//        return productRepository.findCategoryByComment(comment);
-//    }
+    @Override
+    public Page<ProductWithRatingDto> findAllWithRating(Pageable pageable) {
+        Page<ProductEntity> productEntityPage = productRepository.findAll(pageable);
+        List<ProductWithRatingDto> productWithRatingDtoList = productEntityPage
+                .stream()
+                .map(this::buildProductWithRating)
+                .collect(Collectors.toList());
+        return new PageImpl<>(productWithRatingDtoList);
+    }
 
+    private ProductWithRatingDto buildProductWithRating(ProductEntity productEntity) {
+        Page<CommentDto> commentPage = commentService.findAllCommentByProduct(productEntity.getId(), Pageable.unpaged());
+        BigDecimal averageRating = new BigDecimal(0);
+        if (CollectionUtils.isNotEmpty(commentPage.getContent())) {
+            BigDecimal sum = new BigDecimal(0);
+            for (int i = 0; i < commentPage.getTotalElements(); i++) {
+                sum = sum.add(BigDecimal.valueOf(commentPage.getContent().get(i).getRating()));
+            }
+//            commentPage.forEach(e -> sum.add(BigDecimal.valueOf(e.getRating())));
+            BigDecimal elementsAmount = BigDecimal.valueOf(commentPage.getTotalElements());
+            averageRating = sum.divide(elementsAmount, 2, RoundingMode.HALF_UP);
+        }
+        return ProductWithRatingDto.builder()
+                .id(productEntity.getId())
+                .categoryId(productEntity.getCategoryId())
+                .name(productEntity.getName())
+                .description(productEntity.getDescription())
+                .count(productEntity.getCount())
+                .price(productEntity.getPrice())
+                .averageRating(averageRating)
+                .build();
+    }
 }

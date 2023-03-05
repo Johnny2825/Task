@@ -1,16 +1,20 @@
 package com.example.task.service.product;
 
-import com.example.task.entity.Product;
+import com.example.task.controller.dto.ProductDto;
+import com.example.task.model.ProductWithRatingDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * @author Tarkhov Evgeniy
+ */
 public interface ProductService {
 
-    List<Product> test();
+    Page<ProductDto> findAll(Pageable pageable);
 
-    List<Product> findAll();
+    Optional<ProductDto> findById(Long id);
 
-    List<Product> findAllMoreThan(String value);
-
-    Product findById(String id);
+    Page<ProductWithRatingDto> findAllWithRating(Pageable pageable);
 }
