@@ -20,4 +20,5 @@ public class ProductDto implements Serializable {
     private String description;
     private Long count;
     private BigDecimal price;
+    private BigDecimal averageRating;
 }

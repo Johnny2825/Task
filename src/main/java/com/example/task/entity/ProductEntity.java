@@ -48,4 +48,7 @@ public class ProductEntity {
 
     @Column(name = "price")
     private BigDecimal price;
+
+    @Column(name = "average_rating")
+    private BigDecimal averageRating;
 }

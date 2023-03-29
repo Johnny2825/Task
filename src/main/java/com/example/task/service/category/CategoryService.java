@@ -7,14 +7,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 /**
- * Сервис для работы с категорями продуктов
- *
  * @author Tarkhov Evgeniy
  */
 public interface CategoryService {
 
     Page<CategoryDto> findAll(Pageable pageable);
 
-    Optional<CategoryDto> findById(Long id);
-
+    Optional<CategoryDto> findById(Long categoryId);
 }

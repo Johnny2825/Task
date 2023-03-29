@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Tarkhov Evgeniy
  */
-
 @RestController
 @RequiredArgsConstructor
 public class CategoryController {

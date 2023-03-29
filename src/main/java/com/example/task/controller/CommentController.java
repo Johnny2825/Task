@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
+/**
+ * @author Tarkhov Evgeniy
+ */
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -31,7 +36,7 @@ public class CommentController {
 
     @PostMapping("/comments/byproduct/{productId}")
     ResponseEntity<CommentDto> createComment(@PathVariable("productId") Long productId,
-                             @RequestBody CommentDto commentDto) {
+                                             @RequestBody @Valid  CommentDto commentDto) {
         return commentService.createComment(productId, commentDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
@@ -46,7 +51,7 @@ public class CommentController {
 
     @PutMapping("/comments/{commentId}")
     ResponseEntity<CommentDto> updateComment(@PathVariable("commentId") Long commentId,
-                             @RequestBody CommentDto commentDto) {
+                                             @RequestBody @Valid CommentDto commentDto) {
         return commentService.updateComment(commentId, commentDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());

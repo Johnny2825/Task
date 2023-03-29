@@ -25,6 +25,7 @@ public class ProductMapperImpl implements ProductMapper {
                 .description(productEntity.getDescription())
                 .count(productEntity.getCount())
                 .price(productEntity.getPrice())
+                .averageRating(productEntity.getAverageRating())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class ProductMapperImpl implements ProductMapper {
                 .description(productDto.getDescription())
                 .count(productDto.getCount())
                 .price(productDto.getPrice())
+                .averageRating(productDto.getAverageRating())
                 .build();
     }
 }
