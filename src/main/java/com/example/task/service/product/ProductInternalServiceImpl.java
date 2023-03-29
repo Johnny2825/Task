@@ -11,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,18 +39,18 @@ public class ProductInternalServiceImpl implements ProductInternalService {
                 .stream()
                 .map(productMapper::map)
                 .collect(Collectors.toList());
-        return new PageImpl<>(productDtoList);
+        return new PageImpl<>(productDtoList, pageable, productDtoList.size());
     }
 
     @Override
-    public Optional<ProductDto> findById(final Long productId) {
+    public Optional<ProductDto> findById(@NonNull final Long productId) {
         Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
         return productEntityOptional.map(productMapper::map);
     }
 
     @Override
     @Transactional
-    public void updateAverageScore(final Long productId) {
+    public void updateAverageScore(@NonNull final Long productId) {
         final Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
         if (productEntityOptional.isEmpty()) {
             return;

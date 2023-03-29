@@ -32,7 +32,7 @@ public class CategoryInternalServiceImpl implements CategoryInternalService {
                 .stream()
                 .map(categoryMapper::map)
                 .collect(Collectors.toList());
-        return new PageImpl<>(categoryDtoList);
+        return new PageImpl<>(categoryDtoList, pageable, categoryDtoList.size());
     }
 
     @Override

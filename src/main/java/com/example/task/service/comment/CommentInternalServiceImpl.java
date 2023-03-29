@@ -31,7 +31,7 @@ public class CommentInternalServiceImpl implements CommentInternalService {
                 .stream()
                 .map(commentMapper::map)
                 .collect(Collectors.toList());
-        return new PageImpl<>(commentDtoList);
+        return new PageImpl<>(commentDtoList, pageable, commentDtoList.size());
     }
 
     @Override

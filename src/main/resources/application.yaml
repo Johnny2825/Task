@@ -4,7 +4,7 @@ server:
 spring:
 # Postgres
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=shop
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=task
     username: postgres
     password: postgres
 # H2
